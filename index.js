@@ -5,13 +5,27 @@ const fs = require("fs-extra");
 const getDefaultConfig = require("./default-config");
 const { addCachedGlobalData } = require("./utils");
 
-const extractFiles = (compilerResult) =>
-  Object.keys(compilerResult.assets).reduce((acc, key) => {
-    acc[key] = compilerResult.assets[key].source();
+const extractFiles = (
+  compilerResult,
+  configObj = { addCachedGlobalData: false }
+) => {
+  const { addCachedGlobalData } = configObj;
+
+  return Object.keys(compilerResult.assets).reduce((acc, key) => {
+    if (addCachedGlobalData) {
+      acc[key] = compilerResult.assets[key].source();
+    } else {
+      acc[key] = compilerResult.assets[key];
+    }
+
     return acc;
   }, {});
+};
 
-const runCompiler = async (compiler) =>
+const runCompiler = async (
+  compiler,
+  { addCachedGlobalData } = { addCachedGlobalData: false }
+) =>
   new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       if (err || stats.hasErrors()) {
@@ -22,8 +36,10 @@ const runCompiler = async (compiler) =>
         return;
       }
       const { compilation } = stats;
-      const resources = compilation.modules.map((mod) => mod.resource);
-      const files = extractFiles(compilation);
+      const resources = Array.from(compilation.modules).map(
+        (mod) => mod.resource
+      );
+      const files = extractFiles(compilation, { addCachedGlobalData });
       resolve(files, resources);
     });
   });
@@ -47,7 +63,6 @@ const webpackPlugin = (
     return;
   }
 
-  
   let config = getDefaultConfig(entryPoints, output);
 
   // If the user specifies a configFunction allow them to extend
@@ -57,8 +72,8 @@ const webpackPlugin = (
   }
 
   const compiler = webpack(config);
-  
-  if(!output) {
+
+  if (!output) {
     // Fetches files from the node filesystem
     // and outputs to memory files system
     compiler.outputFileSystem = mfs;
@@ -73,7 +88,9 @@ const webpackPlugin = (
       addCachedGlobalData(
         eleventyConfig,
         async () => {
-          const data = await runCompiler(compiler);
+          const data = await runCompiler(compiler, {
+            addCachedGlobalData: true,
+          });
           return data;
         },
         "webpack"
@@ -81,23 +98,22 @@ const webpackPlugin = (
     } else {
       return runCompiler(compiler);
     }
-  }
+  };
   doBuild();
 
-   // Ideally we'd add a watch for each module consumed by the entry, 
-   // but the compiler is async and as yet there is no way to await this in a plugin
-   let watchPaths = [];
-   Object.entries(entryPoints).forEach(([_, watchPath]) => {
-     watchPaths.push(watchPath);
-     eleventyConfig.addWatchTarget(watchPath);
-   });
-   eleventyConfig.on("beforeWatch", (changedFiles) => {
-     // Run me before --watch or --serve re-runs
-     if(watchPaths.some(watchPath => changedFiles.includes(watchPath))) {
-       doBuild();
-     }
-   });
-
+  // Ideally we'd add a watch for each module consumed by the entry,
+  // but the compiler is async and as yet there is no way to await this in a plugin
+  let watchPaths = [];
+  Object.entries(entryPoints).forEach(([_, watchPath]) => {
+    watchPaths.push(watchPath);
+    eleventyConfig.addWatchTarget(watchPath);
+  });
+  eleventyConfig.on("beforeWatch", (changedFiles) => {
+    // Run me before --watch or --serve re-runs
+    if (watchPaths.some((watchPath) => changedFiles.includes(watchPath))) {
+      doBuild();
+    }
+  });
 };
 
 module.exports = webpackPlugin;
