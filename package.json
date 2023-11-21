@@ -1,5 +1,5 @@
 {
-  "name": "@jamshop/eleventy-plugin-webpack",
+  "name": "@geoffdavis92/eleventy-plugin-webpack",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "fs-extra": "^9.0.1",
     "memory-fs": "^0.5.0",
     "svg-inline-loader": "^0.8.2",
-    "terser-webpack-plugin": "^4.2.2",
-    "webpack": "^4.44.2"
+    "terser-webpack-plugin": "^5.3.9",
+    "webpack": "^5.89.0"
   }
 }
