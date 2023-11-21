@@ -1,6 +1,7 @@
 {
   "name": "@geoffdavis92/eleventy-plugin-webpack",
-  "version": "1.0.0",
+  "author": "Geoff Davis <geoffdavis92@gmail.com>",
+  "version": "1.2.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
@@ -12,5 +13,24 @@
     "svg-inline-loader": "^0.8.2",
     "terser-webpack-plugin": "^5.3.9",
     "webpack": "^5.89.0"
-  }
+  },
+  "description": "Eleventy webpack plugin utilizing Webpack v5",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geoffdavis92/eleventy-plugin-webpack.git"
+  },
+  "keywords": [
+    "eleventy",
+    "webpack",
+    "plugin",
+    "11ty"
+  ],
+  "bugs": {
+    "url": "https://github.com/geoffdavis92/eleventy-plugin-webpack/issues"
+  },
+  "homepage": "https://github.com/geoffdavis92/eleventy-plugin-webpack#readme"
 }
