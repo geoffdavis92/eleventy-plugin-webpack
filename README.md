@@ -3,14 +3,14 @@
 Install:
 
 ```
-npm install @jamshop/eleventy-plugin-webpack
+npm install @geoffdavis92/eleventy-plugin-webpack
 ```
 
 ## Usage
 
 In you main config `.eleventy.js`: 
 ```js
-const pluginWebpack = require("@jamshop/eleventy-plugin-webpack");
+const pluginWebpack = require("@geoffdavis92/eleventy-plugin-webpack");
 
 module.exports = (eleventyConfig) => {
   eleventyConfig.addPlugin(pluginWebpack, {
@@ -31,3 +31,7 @@ Their are 3 main options, `entryPoints` which is required and should contain a s
 The second option `output` is optional although required in most situations. This is the output directory for the transpiled JavaScript. The generated file path will be a combination of the key and the `output`.
 
 The third option `configFunction` allows you to modify the webpack config.
+
+## Known Bugs
+
+- When the `eleventyConfig.addCachedGlobalData` property is truthy, the plugin will attempt to extract files and use the `.source()` method, which does not exist on the `assets` constructor: `SizeOnlySource` (ref #1)
