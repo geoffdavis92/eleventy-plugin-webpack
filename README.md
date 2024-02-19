@@ -34,4 +34,5 @@ The third option `configFunction` allows you to modify the webpack config.
 
 ## Known Bugs
 
-- When the `eleventyConfig.addCachedGlobalData` property is truthy, the plugin will attempt to extract files and use the `.source()` method, which does not exist on the `assets` constructor: `SizeOnlySource` (ref #1)
+- ~~When the `eleventyConfig.addCachedGlobalData` property is truthy, the plugin will attempt to extract files and use the `.source()` method, which does not exist on the `assets` constructor: `SizeOnlySource` (ref [#1](https://github.com/geoffdavis92/eleventy-plugin-webpack/issues/1))~~
+  - Addressed by [PR #8](https://github.com/geoffdavis92/eleventy-plugin-webpack/pull/8)
