@@ -4,6 +4,7 @@ const mfs = new MemoryFileSystem();
 const fs = require("fs-extra");
 const getDefaultConfig = require("./default-config");
 const { addCachedGlobalData } = require("./utils");
+const bypassSourceMethod = true;
 
 const extractFiles = (
   compilerResult,
@@ -12,7 +13,7 @@ const extractFiles = (
   const { addCachedGlobalData } = configObj;
 
   return Object.keys(compilerResult.assets).reduce((acc, key) => {
-    if (addCachedGlobalData) {
+    if (addCachedGlobalData && !bypassSourceMethod) {
       acc[key] = compilerResult.assets[key].source();
     } else {
       acc[key] = compilerResult.assets[key];
